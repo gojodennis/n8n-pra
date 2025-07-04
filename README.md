@@ -48,15 +48,6 @@ It replies with a curated recommendation from a Notion database, powered by Gemi
 
 ---
 
-## 📦 Dependencies
-
-- `@google/generative-ai`
-- `axios`
-- `notion-client`
-- `node-telegram-bot-api`
-
----
-
 ## 🔒 Secrets
 
 Keep your API keys safe. Never commit `.env`.
