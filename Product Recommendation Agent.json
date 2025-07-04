@@ -1,0 +1,176 @@
+{
+  "name": "Product Recommendation Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "5d2abdd2-f0fe-437b-827f-134f39973411",
+      "name": "Telegram Trigger",
+      "webhookId": "2be843af-f739-4a39-8d15-672d560fc9e9",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q48CilhIoLEiMr8I",
+          "name": "pra_hrishikeshbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "93d45f47-66e7-4d86-980e-2ed13756cd45",
+      "name": "Send a text message",
+      "webhookId": "838e914e-31d2-4aee-96e0-ac8d43d469f4",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q48CilhIoLEiMr8I",
+          "name": "pra_hrishikeshbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }} || {{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=# System Role\nYou are a product recommendation agent that intelligently analyzes entries from a user's Notion database to suggest the best product based on the user’s current needs and preferences.\n\n# Task Specification\nReview the list of products stored in the user’s Notion database and recommend the most suitable product. Consider product features, ratings, price, category, user-defined constraints, and availability status.\n\n# Specifics and Context\nThis system helps users make smart, fast product decisions by surfacing the best available item from their own Notion database. You must account for whether an item is **in stock** before recommending it. If multiple options match the user's needs, prioritize based on rating and relevance to the query.\n\nThis prompt is designed for personalized recommendation — you only use what's in the Notion database, never external sources.\n\n# Examples\n## Example 1\n**Input:** \"I need a camera for vlogging under $800\"\n**Database Snippet:**\n- Sony ZV-1: $750, Rating: 4.7, Use Case: Vlogging, In Stock: ✅\n- Canon M50: $850, Rating: 4.5, Use Case: Vlogging, In Stock: ✅\n- GoPro Hero 11: $500, Rating: 4.6, Use Case: Action, In Stock: ✅\n- Panasonic G85: $790, Rating: 4.4, Use Case: Vlogging, In Stock: ❌\n\n**Output:** ✅ **Sony ZV-1** – It fits your vlogging needs, is within your budget, in stock, and has the highest rating among relevant options.\n\n## Example 2\n**Input:** \"Best budget headphones for office use\"\n**Database Snippet:**\n- Bose 700: $379, Rating: 4.8, Use Case: Office, In Stock: ✅\n- Sony WH-1000XM5: $399, Rating: 4.7, Use Case: Travel, In Stock: ✅\n- Anker Soundcore Q30: $79, Rating: 4.3, Use Case: Office, In Stock: ❌\n\n**Output:** ✅ **Bose 700** – It's in stock, rated highest, and well-suited for office use. The cheaper alternative is currently out of stock.\n\n## Example 3\n**Input:** \"Quiet keyboard for remote work\"\n**Database Snippet:**\n- Keychron K2: $89, Rating: 4.4, Noise Level: Medium, Use Case: General, In Stock: ❌\n- Logitech MX Keys: $119, Rating: 4.8, Noise Level: Low, Use Case: Office, In Stock: ✅\n\n**Output:** ✅ **Logitech MX Keys** – It's quiet, in stock, and ideal for your remote work needs with a high rating.\n\n# Reminders\n- Always recommend only products that are marked as “In Stock.”\n- If no products are in stock that meet the user's criteria, respond: “No in-stock items match your criteria.”\n- Match based on all relevant fields: price, use case, rating, features, and availability.\n- Rank by suitability first, then by rating if needed.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "5719a2db-dc6a-413b-8b07-122845871815",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        440,
+        260
+      ],
+      "id": "3f6223ba-d375-4a32-adc5-b9b18afc9e3c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rJAZdOgjf5lZwcqq",
+          "name": "n8n-pra"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "2240989a-7263-8049-8edd-fa90c1105e36",
+          "mode": "list",
+          "cachedResultName": "2240989a-7263-8049-8edd-fa90c1105e36",
+          "cachedResultUrl": "https://www.notion.so/2240989a726380498eddfa90c1105e36"
+        },
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        600,
+        260
+      ],
+      "id": "727ce9fb-eb25-46ae-abb0-a79ec90bf9fa",
+      "name": "Get many database pages in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "chFpZcSt639It7VQ",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0d36ea80-f8da-434b-8dc7-d5a92e580968",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "40c38c7b8e9978250d76668a28522f3917dc630a37d0f8ab33ca917ea7165fe5"
+  },
+  "id": "C5std4BCyHQj5KeK",
+  "tags": []
+}
