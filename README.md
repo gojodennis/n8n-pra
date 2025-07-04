@@ -65,7 +65,7 @@ Keep your API keys safe. Never commit `.env`.
 
 ## 📁 Files
 
-- `/workflow.json` – n8n workflow (import this).
+- `/Product Recommendation Agent.json` – n8n workflow (import this).
 - `/src/` – handlers and utility logic.
 - `/docs/` – optional flowcharts or API refs.
 
