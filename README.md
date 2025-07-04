@@ -42,3 +42,62 @@ It replies with a curated recommendation from a Notion database, powered by Gemi
 
 ## 🧠 Flow Overview
 
+- Parses user intent with Gemini.
+- Filters & formats product data from Notion.
+- Responds in Telegram with a direct answer.
+
+---
+
+## 📦 Dependencies
+
+- `@google/generative-ai`
+- `axios`
+- `notion-client`
+- `node-telegram-bot-api`
+
+---
+
+## 🔒 Secrets
+
+Keep your API keys safe. Never commit `.env`.
+
+---
+
+## 📁 Files
+
+- `/workflow.json` – n8n workflow (import this).
+- `/src/` – handlers and utility logic.
+- `/docs/` – optional flowcharts or API refs.
+
+---
+
+## 📌 Notes
+
+- Gemini handles fuzzy queries well. Prompt tuning matters.
+- Notion DB schema expects: `name`, `category`, `features`, `price`.
+
+---
+
+## ⚠️ Caveats
+
+- Notion API rate limits exist.
+- Telegram Bot API may miss messages if webhook isn't stable.
+- Gemini might hallucinate—sanity checks help.
+
+---
+
+## 🧭 Direction
+
+Next:
+- Add voice input support (using Telegram voice + Whisper).
+- Cache frequent queries.
+- Fine-tune prompts for niche domains.
+
+---
+
+## 🐚 License
+
+MIT.
+
+---
+
